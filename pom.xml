@@ -251,6 +251,12 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
           <version>3.5.5</version>
+          <configuration>
+            <!-- Selenide-driven ChromeDriver tests on macOS aarch64 occasionally lose
+                 their renderer connection mid-flow ("session deleted as the browser has
+                 closed the connection"). Retry once before marking a real failure. -->
+            <rerunFailingTestsCount>2</rerunFailingTestsCount>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -282,7 +288,9 @@
       </plugins>
     </pluginManagement>
     <plugins>
-      <!-- Keep disabled until jakarta upgrade occurs due to issues with liberty holding stdin/stdout open with ee8
+      <!-- Re-enabled for WO-004: characterization tests for JSP view rendering need
+           a live Tomcat to exercise the Stripes/JSP stack via Selenide. Disabled liberty
+           note still applies, but tomcat9 (the default profile) is stable on Java 21. -->
       <plugin>
         <groupId>org.codehaus.cargo</groupId>
         <artifactId>cargo-maven3-plugin</artifactId>
@@ -315,7 +323,6 @@
           </execution>
         </executions>
       </plugin>
-      -->
     </plugins>
   </build>
 
